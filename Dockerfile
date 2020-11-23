@@ -1,3 +1,4 @@
+  GNU nano 4.8                                                                                    Dockerfile
 FROM bitnami/spark:3.0.0
 USER root
 
@@ -13,7 +14,7 @@ RUN apt-get update && apt install gnupg -y && \
 
 WORKDIR /app
 
-COPY *.jar /app/
+COPY . /app/
 COPY requirements.txt .
 COPY DockerScript.sh .
 
