@@ -13,10 +13,12 @@ RUN apt-get update && apt install gnupg -y && \
 
 WORKDIR /app
 
-COPY StockPredictionStructuredStreaming /app/StockPredictionStructuredStreaming
+COPY *.jar /app/
 COPY requirements.txt .
 COPY DockerScript.sh .
 
 
+
+RUN chmod +x /app/DockerScript.sh
 RUN pip3 install -r requirements.txt
-ENTRYPOINT ["/app/StockPredictionStructuredStreaming/DockerScript.sh"]
+ENTRYPOINT ["/app/DockerScript.sh"]
