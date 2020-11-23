@@ -1,4 +1,3 @@
-  GNU nano 4.8                                                                                    Dockerfile
 FROM bitnami/spark:3.0.0
 USER root
 
