@@ -17,6 +17,7 @@
 
 package SparkStructuredStreaming
 
+import AWSUtilites.{S3Configurations, S3Upload}
 import UtilityPackage.Utility
 import org.apache.log4j.Logger
 import org.apache.spark.ml.PipelineModel
@@ -45,6 +46,8 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 object StockPredictionKafkaStructuredStreaming extends App {
   val sparkSessionObj =
     Utility.createSessionObject("Real Time Stock Prediction")
+  val checkS3Connection =
+    S3Configurations.connectToS3(sparkSessionObj.sparkContext)
 
   val pythonHandlerObj = new PythonHandler(sparkSessionObj)
   val structuredStreamingObj = new StockPredictionKafkaStructuredStreaming(
@@ -214,15 +217,25 @@ class StockPredictionKafkaStructuredStreaming(
         predictedClosePriceDataFrame.printSchema()
         predictedClosePriceDataFrame.show()
         logger.info(
-          "Saving the predicted Price in the following path" + pathToSave
+          "Saving the predicted Price in the following Bucket" + pathToSave
         )
         //Saving the output dataframe as csv in the provided path
+        if (pathToSave.startsWith("s3a://")) {
+          val startPosition = pathToSave.indexOf("//") + 2
+          val lastPosition = pathToSave.lastIndexOf("/")
+          val bucketName = pathToSave.substring(startPosition, lastPosition)
+          println(bucketName)
+          if (!S3Upload.checkBucketExistsOrNot(bucketName)) {
+            S3Upload.createBucket(bucketName)
+          }
+        }
         predictedClosePriceDataFrame.write
           .mode("append")
           .option("header", true)
           .csv(
             pathToSave
           )
+
       }
     } catch {
       case ex: Exception =>

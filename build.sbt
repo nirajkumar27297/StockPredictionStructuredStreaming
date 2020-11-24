@@ -17,3 +17,6 @@ libraryDependencies += "org.apache.spark" %% "spark-streaming-kafka-0-10" % "2.4
 libraryDependencies += "org.apache.spark" %% "spark-sql-kafka-0-10" % "3.0.0"
 
 libraryDependencies += "jp.co.bizreach" %% "aws-s3-scala" % "0.0.15"
+
+libraryDependencies += "org.apache.hadoop" % "hadoop-common" % "3.2.1"
+libraryDependencies += "org.apache.hadoop" % "hadoop-aws" % "3.2.1"
